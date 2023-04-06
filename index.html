@@ -147,11 +147,6 @@
     cursor: pointer;
   }
 
-  .player-music-info .time {
-    white-space: nowrap;
-
-  }
-
   .progress-bar-wrapper {
     width: 100%;
     position: relative;
@@ -186,7 +181,7 @@
     cursor: pointer;
   }
 
-  .round {
+  .player_progress__dot {
     position: absolute;
     top: -6px;
     right: -6.5px;
@@ -336,7 +331,7 @@
         <div class="progress-bar-wrapper">
           <div id="progressBar" class="progress-bar">
             <div id="progressBarFill" class="fill">
-              <div class="round" id="progress-round"></div>
+              <div class="player_progress__dot"></div>
             </div>
             <div id="progressBuffer"></div>
           </div>
