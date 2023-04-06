@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lyrics Player</title>
+    <link rel="stylesheet" href="./index.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system,
+                BlinkMacSystemFont,
+                PingFang SC,
+                Hiragino Sans GB,
+                HarmonyOS_Medium,
+                Arial,
+                Microsoft YaHei,
+                Helvetica Neue,
+                Helvetica,
+                sans-serif;
+            user-select: none;
+        }
+
+        .lyrics-content {
+            --container-padding: 1rem;
+            width: min(700px, 100% - (var(--container-padding) * 2));
+
+            height: 150px;
+            overflow: hidden;
+            padding: 0 10px;
+            margin: 100px auto;
+            line-height: 2;
+            background-color: rgb(203, 207, 202);
+
+        }
+
+        .lyrics-content ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            transition: transform .3s ease-out;
+        }
+
+        .lyrics-content ul li {
+            /* height: 85px; */
+            color: #777;
+            font-size: 25px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .lyrics-content ul li.active {
+            color: #f00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <audio src="./Beyond - 光辉岁月.flac"></audio>
+    <div class="lyrics-content">
+        <ul>
+
+        </ul>
+
+    </div>
+
+    <button id="play_btn">Play</button>
+    <button id="Pause_btn">Pause</button>
+
+    <script>
+        const audio = document.querySelector('audio');
+        const lyricsContent = document.querySelector('.lyrics-content');
+        const playBtn = document.querySelector('#play_btn');
+        const pauseBtn = document.querySelector('#Pause_btn');
+
+        const lyricContainer = document.querySelector('ul');
+        let lyricItems;
+        let lyricIndex = 0;
+
+
+
+        let lrc = `
+       [00:00.000] 作词 : 黄家驹\\n
+       [00:01.000] 作曲 : 黄家驹\\n
+       [00:02.000] 编曲 : Beyond\\n
+       [00:03.000] 制作人 : Beyond/Gordon O'Yang\\n
+       [00:04.000] Synth Programming : Gordon O'Yang / 叶世荣\\n
+       [00:05.000] Mixed by Philip Kwok\\n
+       [00:28.650]钟声响起归家的讯号\\n
+       [00:33.036]在他生命里\\n
+       [00:36.281]仿佛带点唏嘘\\n
+       [00:41.564]黑色肌肤给他的意义\\n
+       [00:46.038]是一生奉献 肤色斗争中\\n
+       [00:54.543]年月把拥有变做失去\\n
+       [01:01.056]疲倦的双眼带着期望\\n
+       [01:07.551]今天只有残留的躯壳\\n
+       [01:11.162]迎接光辉岁月\\n
+       [01:14.391]风雨中抱紧自由\\n
+       [01:20.515]一生经过彷徨的挣扎\\n
+       [01:24.167]自信可改变未来\\n
+       [01:27.343]问谁又能做到\\n
+       [01:43.174]可否不分肤色的界限\\n
+       [01:47.643]愿这土地里\\n
+       [01:50.774]不分你我高低\\n
+       [01:56.103]缤纷色彩闪出的美丽\\n
+       [02:00.572]是因它没有\\n
+       [02:03.764]分开每种色彩\\n
+       [02:09.060]年月把拥有变做失去\\n
+       [02:15.509]疲倦的双眼带着期望\\n
+       [02:22.001]今天只有残留的躯壳\\n
+       [02:25.740]迎接光辉岁月\\n
+       [02:28.901]风雨中抱紧自由\\n
+       [02:34.992]一生经过彷徨的挣扎\\n
+       [02:38.655]自信可改变未来\\n
+       [02:41.900]问谁又能做到\\n
+       [03:23.643]今天只有残留的躯壳\\n
+       [03:27.339]迎接光辉岁月\\n
+       [03:30.561]风雨中抱紧自由\\n
+       [03:36.626]一生经过彷徨的挣扎\\n
+       [03:40.315]自信可改变未来\\n
+       [03:43.493]问谁又能做到\\n
+       [03:55.305]Ah\\n
+       [03:59.359]今天只有残留的躯壳\\n
+       [04:02.934]迎接光辉岁月\\n
+       [04:06.174]风雨中抱紧自由\\n
+       [04:12.267]一生经过彷徨的挣扎\\n
+       [04:15.855]自信可改变未来\\n
+       [04:19.047]问谁又能做到\\n
+       [04:23.624]Woo\\n
+       [04:30.932]Ah\\n
+       [04:35.027]今天只有残留的躯壳\\n
+       [04:38.580]迎接光辉岁月\\n
+       [04:41.808]风雨中抱紧自由\\n
+       [04:47.928]一生经过彷徨的挣扎\\n
+       [04:51.555]自信可改变未来\\n
+        
+        `
+        // 解析歌词信息
+        function parseLyric(lyric) {
+            const lines = lyric.split('\n');
+            const result = [];
+            const timeExp = /\[(\d{2}):(\d{2})\.(\d{3})\]/;
+            for (let line of lines) {
+                const matches = timeExp.exec(line);
+                if (!matches) continue;
+                const minutes = parseInt(matches[1]);
+                const seconds = parseInt(matches[2]);
+                const milliseconds = parseInt(matches[3]);
+                const time = minutes * 60 + seconds + milliseconds / 1000;
+                const text = line.replace(timeExp, '').trim();
+                result.push({
+                    time,
+                    text
+                });
+            }
+            return result;
+        }
+
+        const arr = []
+        // 获取当前播放时间对应的歌词
+        function getCurrentLyric(time) {
+            while (lyricIndex < lyricItems.length - 1) {
+                if (time >= arr[lyricIndex] && time < arr[lyricIndex + 1]) {
+                    return lyricItems[lyricIndex];
+                }
+                lyricIndex++;
+            }
+            return lyricIndex === lyricItems.length - 1 ? lyricItems[lyricIndex] : null;
+        }
+
+
+
+        let y = 0;
+        // 滚动至当前歌词
+        function scrollLyric(lyric) {
+            console.log('scroll');
+            if (!lyric) return;
+            y += 50
+            lyricContainer.style.transform = `translateY(-${y}px)`
+
+
+        }
+
+        audio.volume = 0.01;
+
+        //加载歌词并开始播放音乐
+        const lyricData = parseLyric(lrc);
+        for (let lyric of lyricData) {
+            const item = document.createElement('li');
+            // item.dataset.time = lyric.time;
+            arr.push(lyric.time)
+            console.log(lyric.text);
+
+            item.innerText = lyric.text.split('\\n').join('');
+            lyricContainer.appendChild(item);
+        }
+        lyricItems = lyricContainer.querySelectorAll('li');
+
+        playBtn.addEventListener('click', function () {
+            audio.play();
+        })
+
+        pauseBtn.addEventListener('click', function () {
+            audio.pause();
+        })
+
+
+        let prevLyric = null
+        let i = 0
+        // 播放器播放事件
+        audio.addEventListener('timeupdate', () => {
+            let currentLyric = getCurrentLyric(audio.currentTime);
+            if (prevLyric != currentLyric) {
+                i++
+                prevLyric = currentLyric
+                // scrollLyric(currentLyric);
+                const activeLyric = lyricContainer.querySelector('.active');
+                activeLyric && activeLyric.classList.remove('active');
+                currentLyric.classList.add('active');
+                if (i >= 3) {
+                    console.log('test');
+                    scrollLyric(currentLyric);
+
+
+                }
+
+            }
+        });
+    </script>
+</body>
+
+</html>
