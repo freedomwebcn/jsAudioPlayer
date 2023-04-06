@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_3915810_hw1x5jmkmbi.css">
+  <link rel="stylesheet" href="./index.css">
+  <title>Document</title>
+</head>
+<style>
+  :root {
+    --container-padding: 1rem;
+  }
+
+
+  /* Box sizing rules */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Remove default margin */
+  * {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+  }
+
+  /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+  ul[role="list"],
+  ol[role="list"] {
+    list-style: none;
+  }
+
+  /* Set core root defaults */
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  /* Set core body defaults */
+  body {
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+  }
+
+  /* A elements that don't have a class get default styles */
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
+
+
+  /* Make images easier to work with */
+  img,
+  picture,
+  svg {
+    max-width: 100%;
+    display: block;
+  }
+
+  /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system,
+      BlinkMacSystemFont,
+      PingFang SC,
+      Hiragino Sans GB,
+      HarmonyOS_Medium,
+      Arial,
+      Microsoft YaHei,
+      Helvetica Neue,
+      Helvetica,
+      sans-serif;
+  }
+
+  .audio-player {
+    position: relative;
+    width: min(700px, 100% - (var(--container-padding) * 2));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-inline: auto;
+    transform: translateY(50%);
+    user-select: none;
+  }
+
+
+  .player-header {
+    flex: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .player_music {
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .player-music-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+  }
+
+  .player-music-info .title {
+    flex: 1;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .player-music-info a {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .player-music-info .time {
+    white-space: nowrap;
+
+  }
+
+  .progress-bar-wrapper {
+    width: 100%;
+    position: relative;
+    margin-bottom: 5px;
+  }
+
+  .progress-bar {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #eee;
+    cursor: pointer;
+    transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #2ecc71;
+  }
+
+  .handle {
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 10px;
+    height: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+
+  .round {
+    position: absolute;
+    top: -6px;
+    right: -6.5px;
+    width: 13px;
+    height: 13px;
+    background-color: rgb(14, 187, 115);
+    border-radius: 6.5px;
+  }
+
+  #progressBuffer {
+    height: 2px;
+    width: 0;
+    background-color: #cefde5;
+  }
+
+  .left-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1rem;
+  }
+
+  #prv-play {
+    font-size: 25px;
+  }
+
+  .next-btn {
+    font-size: 25px;
+  }
+
+  .left-control span {
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .track-list {
+    flex: 100%;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 10px 10px;
+  }
+
+  .current-play {
+    background-color: rgb(22, 93, 255);
+    color: #fff;
+  }
+
+  #playButton {
+    cursor: pointer;
+  }
+
+  /* 音量条 */
+
+  #volumeSlider {
+    position: relative;
+    width: 100px;
+    height: 3px;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+
+  #volumeSliderFill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #333;
+  }
+
+  #volumeSliderThumb {
+    position: absolute;
+    top: -4px;
+    left: calc(50% - 6px);
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #333;
+  }
+
+  #playBtn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 20px;
+
+  }
+
+  #playBtn span {
+    font-size: 29px;
+  }
+
+  ;
+
+  #playBtn:hover {
+    /* background-color: rgb(64, 128, 255); */
+  }
+
+  .right-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .volume-svg {
+    width: 36px;
+    height: 36px;
+  }
+</style>
+
+<body>
+  <div class="audio-player">
+    <!-- https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/Lecrae_-_Anomaly_(Lyric_Video).mp3 -->
+    <audio src="" id="myAudio"></audio>
+    <div class="player-header">
+      <div class="left-control">
+        <span id="prv-play" class="iconfont icon-shangyishou">
+        </span>
+        <button id="playBtn">
+          <span class="iconfont icon-bofang1" id="play-svg"></span>
+          <span class="iconfont icon-zanting" id="pause-svg" style="display: none"></span>
+        </button>
+        <span class="next-btn iconfont icon-shangyishou-copy" id="next-play">
+        </span>
+      </div>
+
+      <div class="player_music">
+        <div class="player-music-info">
+          <div class="title" id="music-title">
+            <a href="javascript:;" id="name"></a>
+            -
+            <a href="javascript:;" id="singer"></a>
+          </div>
+          <div class="time" id="music-time">00:00 / 00:00</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div id="progressBar" class="progress-bar">
+            <div id="progressBarFill" class="fill">
+              <div class="round" id="progress-round"></div>
+            </div>
+            <div id="progressBuffer"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-control">
+        <div class="volume-svg">
+          <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" id="mute" style="display: none">
+            <path class="ytp-svg-fill"
+              d="m 21.48,17.98 c 0,-1.77 -1.02,-3.29 -2.5,-4.03 v 2.21 l 2.45,2.45 c .03,-0.2 .05,-0.41 .05,-0.63 z m 2.5,0 c 0,.94 -0.2,1.82 -0.54,2.64 l 1.51,1.51 c .66,-1.24 1.03,-2.65 1.03,-4.15 0,-4.28 -2.99,-7.86 -7,-8.76 v 2.05 c 2.89,.86 5,3.54 5,6.71 z M 9.25,8.98 l -1.27,1.26 4.72,4.73 H 7.98 v 6 H 11.98 l 5,5 v -6.73 l 4.25,4.25 c -0.67,.52 -1.42,.93 -2.25,1.18 v 2.06 c 1.38,-0.31 2.63,-0.95 3.69,-1.81 l 2.04,2.05 1.27,-1.27 -9,-9 -7.72,-7.72 z m 7.72,.99 -2.09,2.08 2.09,2.09 V 9.98 z"
+              id="ytp-id-59"></path>
+          </svg>
+          <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" id="medium-volume">
+            <path class="ytp-svg-fill ytp-svg-volume-animation-speaker"
+              d="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 Z"
+              id="ytp-id-15"></path>
+            <path class="ytp-svg-fill ytp-svg-volume-animation-hider" d="M 9.25,9 7.98,10.27 24.71,27 l 1.27,-1.27 Z"
+              id="ytp-id-16" style="display: none"></path>
+          </svg>
+          <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" id="big-volume" style="display: none">
+            <path class="ytp-svg-fill ytp-svg-volume-animation-speaker" clip-path="url(#ytp-svg-volume-animation-mask)"
+              d="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z"
+              id="ytp-id-15"></path>
+            <path class="ytp-svg-fill ytp-svg-volume-animation-hider"
+              clip-path="url(#ytp-svg-volume-animation-slash-mask)" d="M 9.25,9 7.98,10.27 24.71,27 l 1.27,-1.27 Z"
+              id="ytp-id-16" style="display: none"></path>
+          </svg>
+        </div>
+        <div id="volumeSlider">
+          <div id="volumeSliderFill"></div>
+          <div id="volumeSliderThumb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-list">
+      <ul>
+        <li data-index="0">Service Bell</li>
+        <li data-index="1">Meadowlark</li>
+        <li data-index="2">Hyena Laughing</li>
+        <li data-index="3">Creepy Background</li>
+        <!-- <li data-index="0">大城小爱</li>
+        <li data-index="1">我们的歌</li>
+        <li data-index="2">依然爱你</li> -->
+      </ul>
+    </div>
+  </div>
+  <script>
+    const audio = document.getElementById("myAudio");
+    const musicName = document.getElementById("name");
+    const singer = document.getElementById("singer");
+    const musicTime = document.getElementById("music-time");
+    const progressBar = document.getElementById("progressBar");
+    const progressBarFill = document.getElementById("progressBarFill");
+    const progressBuffer = document.getElementById("progressBuffer");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const volumeSliderFill = document.getElementById("volumeSliderFill");
+    const volumeSliderThumb = document.getElementById("volumeSliderThumb");
+    const playBtn = document.getElementById("playBtn");
+    const playSvg = document.getElementById("play-svg");
+    const pauseSvg = document.getElementById("pause-svg");
+    const prvBtn = document.getElementById("prv-play");
+    const nextBtn = document.getElementById("next-play");
+    const ulEl = document.querySelector("ul");
+    const lis = document.querySelectorAll("li");
+    const lisArr = Array.from(lis);
+
+    const volumeIcons = new Map([
+      [{
+          min: 0,
+          max: 0,
+        },
+        document.getElementById("mute"),
+      ],
+      [{
+          min: 0.00001,
+          max: 0.5,
+        },
+        document.getElementById("medium-volume"),
+      ],
+      [{
+          min: 0.50001,
+          max: 1,
+        },
+        document.getElementById("big-volume"),
+      ],
+    ]);
+
+    // const musicPlaylist = [{
+    //     title: "大城小爱",
+    //     artist: "王力宏",
+    //     url: "./王力宏 - 大城小爱.flac",
+    //   },
+    //   {
+    //     title: "我们的歌",
+    //     artist: "王力宏",
+    //     url: "./王力宏 - 我们的歌.flac",
+    //   },
+    //   {
+    //     title: "依然爱你",
+    //     artist: "王力宏",
+    //     url: "./王力宏 - 依然爱你.flac",
+    //   }
+    // ]
+    const musicPlaylist = [{
+        title: "Service Bell",
+        artist: "Daniel Simion",
+        url: "https://soundbible.com/mp3/service-bell_daniel_simion.mp3",
+        image: "https://source.unsplash.com/crs2vlkSe98/400x400",
+      },
+      {
+        title: "Meadowlark",
+        artist: "Daniel Simion",
+        url: "https://soundbible.com/mp3/meadowlark_daniel-simion.mp3",
+        image: "https://source.unsplash.com/35bE_njbG9E/400x400",
+      },
+      {
+        title: "Hyena Laughing",
+        artist: "Daniel Simion",
+        url: "https://soundbible.com/mp3/hyena-laugh_daniel-simion.mp3",
+        image: "https://source.unsplash.com/Esax9RaEl2I/400x400",
+      },
+      {
+        title: "Creepy Background",
+        artist: "Daniel Simion",
+        url: "http://soundbible.com/mp3/creepy-background-daniel_simon.mp3",
+        image: "https://source.unsplash.com/j0g8taxHZa0/400x400",
+      },
+    ];
+
+    let currentPlayIndex = 0;
+
+    function initMusicPlayer() {
+      audio.volume = 0.5;
+      audio.src = musicPlaylist[currentPlayIndex].url;
+      updateMusicTitle();
+      setCurrentPlayTruckBg();
+
+      // 初始化音量条
+      const volume = audio.volume;
+      setVolumeSvg(volume);
+      const percentage = volume * 100;
+      volumeSliderFill.style.width = `${percentage}%`;
+      volumeSliderThumb.style.left = `calc(${percentage}% - 6px)`;
+
+      // 绑定事件处理函数
+      playBtn.addEventListener("click", togglePlay);
+      prvBtn.addEventListener("click", prvPlay);
+      nextBtn.addEventListener("click", nextPlay);
+      volumeSlider.addEventListener("mousedown", startVolumeSlide);
+      progressBar.addEventListener("mousedown", startProgressSlide);
+      progressBar.addEventListener("mousedown", startProgressSlide);
+      ulEl.addEventListener("click", playTrackList);
+      audio.addEventListener("play", handleAudioPlayback);
+      audio.addEventListener("pause", handleAudioPlayback);
+      audio.addEventListener("progress", updateBufferedProgress);
+      audio.addEventListener("timeupdate", updatePlayProgress);
+      audio.addEventListener("loadedmetadata", onLoadedmetadata)
+      audio.addEventListener("ended", onEnded)
+
+    }
+
+    let duration = "00:00";
+    // 音频元数据下载完毕后 更新时间
+    function onLoadedmetadata() {
+      duration = formatSongsTime(audio.duration);
+      updateMusicTime();
+    };
+    // 媒体文件播放结束或者没有更多可用的数据而停止时被触发
+    function onEnded() {
+      console.log("达到了媒体的未尾");
+      nextPlay()
+    }
+
+    //更新音乐时间
+    function updateMusicTime() {
+      musicTime.innerHTML = `${formatSongsTime(audio.currentTime)} / ${duration}`;
+    }
+    // 格式化时间
+    function formatSongsTime(duration) {
+      let minute = Math.floor(duration / 60).toString().padStart(2, "0");
+      let second = Math.floor(duration % 60).toString().padStart(2, "0");
+      return `${minute}:${second}`;
+    }
+    // 更新歌曲标题
+    function updateMusicTitle(duration) {
+
+      musicName.innerHTML = musicPlaylist[currentPlayIndex].title;
+      singer.innerHTML = musicPlaylist[currentPlayIndex].artist;
+
+    }
+    // 设置音量图标
+    function setVolumeSvg(volume) {
+      for (const [range, icon] of volumeIcons.entries()) {
+        if (volume >= range.min && volume <= range.max) {
+          icon.style.display = "block";
+        } else {
+          icon.style.display = "none";
+        }
+      }
+    }
+    // 设置当前播放歌曲的背景色
+    function setCurrentPlayTruckBg() {
+      lisArr.forEach((item) => (item.style.background = ""));
+      lisArr[currentPlayIndex].style.background = "#f8f8f8";
+    }
+    // 切换播放状态
+    function togglePlay() {
+      audio.paused ? audio.play() : audio.pause();
+    }
+    // 上一首
+    function prvPlay() {
+      currentPlayIndex = (currentPlayIndex - 1 + musicPlaylist.length) % musicPlaylist.length;
+      switchMusic();
+    }
+    // 下一首
+    function nextPlay() {
+      currentPlayIndex = (currentPlayIndex + 1) % musicPlaylist.length;
+      switchMusic();
+    }
+    // 切换音乐
+    function switchMusic() {
+      updateMusicTitle();
+      progressBarFill.style.width = 0;
+      progressBuffer.style.width = 0;
+      audio.src = musicPlaylist[currentPlayIndex].url;
+      audio.play();
+    }
+
+    // 点击播放列表中某一首音乐时触发
+    function playTrackList(e) {
+      const {
+        index
+      } = e.target.dataset;
+      if (index !== undefined) {
+        currentPlayIndex = +index;
+        switchMusic();
+      }
+    }
+    // 音频加载错误
+    audio.onerror = () => {
+      alert("当前音乐文件加载出错,请刷新重试！");
+    };
+    // 处理播放/暂停事件
+    function handleAudioPlayback() {
+      audio.paused ? ((pauseSvg.style.display = "none"), (playSvg.style.display = "block")) : ((playSvg.style.display =
+        "none"), (pauseSvg.style.display = "block"));
+      setCurrentPlayTruckBg();
+    }
+    // 开始调节音量
+    function startVolumeSlide(event) {
+      event.preventDefault();
+      slideVolume(event)
+      document.addEventListener("mousemove", slideVolume);
+      document.addEventListener("mouseup", stopVolumeSlide);
+    }
+    // 调节音量
+    function slideVolume(event) {
+      const rect = volumeSlider.getBoundingClientRect();
+      const position = event.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(position / rect.width, 1));
+      setVolume(percentage);
+      volumeSliderFill.style.width = `${percentage * 100}%`;
+      volumeSliderThumb.style.left = `calc(${percentage * 100}% - 6px)`;
+    }
+    // 停止调节音量
+    function stopVolumeSlide() {
+      document.removeEventListener("mousemove", slideVolume);
+      document.removeEventListener("mouseup", stopVolumeSlide);
+    }
+    // 设置音量
+    function setVolume(percentage) {
+      const volume = Math.pow(percentage, 2);
+      audio.volume = volume;
+      setVolumeSvg(volume);
+    }
+    // 开始调节进度条
+    function startProgressSlide(event) {
+      event.preventDefault();
+      slideProgress(event);
+      document.addEventListener("mousemove", slideProgress);
+      document.addEventListener("mouseup", stopProgressSlide);
+    }
+    // 调节进度条
+    function slideProgress(event) {
+      const rect = progressBar.getBoundingClientRect();
+      const position = event.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(position / rect.width, 1));
+      progressBarFill.style.width = `${percentage * 100}%`;
+      audio.currentTime = audio.duration * percentage;
+    }
+    // 停止调节进度条
+    function stopProgressSlide() {
+      document.removeEventListener("mousemove", slideProgress);
+      document.removeEventListener("mouseup", stopProgressSlide);
+    }
+    // 更新音频缓存进度
+    function updateBufferedProgress() {
+      if (audio.buffered.length > 0) {
+        const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+        const duration = audio.duration;
+        const bufferedPercentage = bufferedEnd / duration;
+        progressBuffer.style.width = `${bufferedPercentage * 100}%`;
+      }
+    }
+    // 实时更新播放进度和时间
+    function updatePlayProgress() {
+      const progressPercentage = audio.currentTime / audio.duration;
+      progressBarFill.style.width = `${progressPercentage * 100}%`;
+      updateMusicTime();
+    }
+
+    initMusicPlayer();
+  </script>
+</body>
+
+</html>
