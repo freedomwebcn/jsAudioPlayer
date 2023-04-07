@@ -104,7 +104,10 @@
     display: flex;
     flex-wrap: wrap;
     width: min(1000px, 100% - (var(--container-padding) * 2));
-    margin: 16px auto;
+    margin: 0px auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-80%);
   }
 
   .audio-player {
@@ -129,7 +132,10 @@
     height: 150px;
     overflow: hidden;
     width: min(700px, 100% - (var(--container-padding) * 2));
-    background-color: #cefde5;
+    background-color: #FF4081;
+    color: #eee;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 
   }
 
@@ -155,7 +161,7 @@
   }
 
   .lrc-container #lrc_wrapper li.active {
-    color: #f00;
+    color: rgb(27, 26, 26);
     font-weight: bold;
     transform: scale(1.2);
   }
@@ -198,7 +204,11 @@
   .progress-bar-wrapper {
     width: 100%;
     position: relative;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
+    height: 8px;
+    padding-top: 6px;
+    box-sizing: content-box;
+    cursor: pointer;
   }
 
   .progress-bar {
@@ -206,8 +216,6 @@
     width: 100%;
     height: 2px;
     background-color: #eee;
-    cursor: pointer;
-    transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
   }
 
   .fill {
@@ -379,7 +387,7 @@
             </div>
             <div class="time" id="music-time">00:00 / 00:00</div>
           </div>
-          <div class="progress-bar-wrapper">
+          <div class="progress-bar-wrapper" id="progressBarWrapper">
             <div id="progressBar" class="progress-bar">
               <div id="progressBarFill" class="fill">
                 <div class="player_progress__dot"></div>
@@ -426,15 +434,10 @@
           <li data-index="1">Meadowlark</li>
           <li data-index="2">Hyena Laughing</li>
           <li data-index="3">Creepy Background</li> -->
-          <li data-index="0">大城小爱</li>
-          <li data-index="1">我们的歌</li>
-          <li data-index="2">依然爱你</li>
+          <li data-index="0">我们的歌</li>
           <!-- 这里以后根据数据动态生成，目前用于测试歌词同步功能 -->
         </ul>
       </div>
-
-
-
     </div>
 
     <div class="lrc-container">
@@ -448,7 +451,7 @@
     const musicName = document.getElementById("name");
     const singer = document.getElementById("singer");
     const musicTime = document.getElementById("music-time");
-    const progressBar = document.getElementById("progressBar");
+    const progressBarWrapper = document.getElementById("progressBarWrapper");
     const progressBarFill = document.getElementById("progressBarFill");
     const progressBuffer = document.getElementById("progressBuffer");
     const volumeSlider = document.getElementById("volumeSlider");
@@ -489,21 +492,10 @@
     ]);
 
     const musicPlaylist = [{
-        title: "大城小爱",
-        artist: "王力宏",
-        url: "./王力宏 - 大城小爱.flac",
-      },
-      {
-        title: "我们的歌",
-        artist: "王力宏",
-        url: "./王力宏 - 我们的歌.flac",
-      },
-      {
-        title: "依然爱你",
-        artist: "王力宏",
-        url: "./王力宏 - 依然爱你.flac",
-      }
-    ]
+      title: "我们的歌",
+      artist: "王力宏",
+      url: "./王力宏 - 我们的歌.flac",
+    }]
     // const musicPlaylist = [{
     //     title: "Service Bell",
     //     artist: "Daniel Simion",
@@ -577,8 +569,8 @@
       prvBtn.addEventListener("click", prvPlay);
       nextBtn.addEventListener("click", nextPlay);
       volumeSlider.addEventListener("mousedown", startVolumeSlide);
-      progressBar.addEventListener("mousedown", startProgressSlide);
-      progressBar.addEventListener("mousedown", startProgressSlide);
+      progressBarWrapper.addEventListener("mousedown", startProgressSlide);
+      progressBarWrapper.addEventListener("mousedown", startProgressSlide);
       ulEl.addEventListener("click", playTrackList);
       audio.addEventListener("play", handleAudioPlayback);
       audio.addEventListener("pause", handleAudioPlayback);
@@ -712,7 +704,7 @@
     }
     // 调节进度条
     function slideProgress(event) {
-      const rect = progressBar.getBoundingClientRect();
+      const rect = progressBarWrapper.getBoundingClientRect();
       const position = event.clientX - rect.left;
       const percentage = Math.max(0, Math.min(position / rect.width, 1));
       progressBarFill.style.width = `${percentage * 100}%`;
