@@ -430,10 +430,6 @@
 
       <div class="track-list">
         <ul id="track-wrapper">
-          <!-- <li data-index="0">Service Bell</li>
-          <li data-index="1">Meadowlark</li>
-          <li data-index="2">Hyena Laughing</li>
-          <li data-index="3">Creepy Background</li> -->
           <li data-index="0">我们的歌</li>
           <!-- 这里以后根据数据动态生成，目前用于测试歌词同步功能 -->
         </ul>
@@ -496,33 +492,6 @@
       artist: "王力宏",
       url: "./王力宏 - 我们的歌.flac",
     }]
-    // const musicPlaylist = [{
-    //     title: "Service Bell",
-    //     artist: "Daniel Simion",
-    //     url: "https://soundbible.com/mp3/service-bell_daniel_simion.mp3",
-    //     image: "https://source.unsplash.com/crs2vlkSe98/400x400",
-    //   },
-    //   {
-    //     title: "Meadowlark",
-    //     artist: "Daniel Simion",
-    //     url: "https://soundbible.com/mp3/meadowlark_daniel-simion.mp3",
-    //     image: "https://source.unsplash.com/35bE_njbG9E/400x400",
-    //   },
-    //   {
-    //     title: "Hyena Laughing",
-    //     artist: "Daniel Simion",
-    //     url: "https://soundbible.com/mp3/hyena-laugh_daniel-simion.mp3",
-    //     image: "https://source.unsplash.com/Esax9RaEl2I/400x400",
-    //   },
-    //   {
-    //     title: "Creepy Background",
-    //     artist: "Daniel Simion",
-    //     url: "http://soundbible.com/mp3/creepy-background-daniel_simon.mp3",
-    //     image: "https://source.unsplash.com/j0g8taxHZa0/400x400",
-    //   },
-    // ];
-
-
 
     const lrc = `
      [00:00.000] 作词 : 王力宏/陈信延\n[00:01.000] 作曲 : 王力宏\n[00:02.000] 编曲 :王力宏\n[00:03.000]\n[00:16.102]已经听了一百遍\n
@@ -550,6 +519,9 @@
     
     `
     let currentPlayIndex = 0;
+    const lyricData = parseLyric(lrc);
+    let lyricItems;
+    let prevLyricIndex = -1; //前一行歌词下标
 
     function initMusicPlayer() {
       audio.volume = 0.5;
@@ -563,6 +535,9 @@
       const percentage = volume * 100;
       volumeSliderFill.style.width = `${percentage}%`;
       volumeSliderThumb.style.left = `calc(${percentage}% - 6px)`;
+
+      // 创建歌词节点
+      createLyricEl()
 
       // 绑定事件处理函数
       playBtn.addEventListener("click", togglePlay);
@@ -757,19 +732,15 @@
       }
       return result;
     }
-
-    const lyricData = parseLyric(lrc);
-    let lyricItems;
-    const lyricTime = []
-
-    for (let lyric of lyricData) {
-      const item = document.createElement('li');
-      lyricTime.push(lyric.time)
-      item.innerText = lyric.text.split('\\n').join('');
-      lrcWrapper.appendChild(item);
+    //  根据解析后的歌词数据 创建歌词节点
+    function createLyricEl() {
+      for (let lyric of lyricData) {
+        const item = document.createElement('li');
+        item.innerText = lyric.text.split('\\n').join('');
+        lrcWrapper.appendChild(item);
+      }
+      lyricItems = lrcWrapper.querySelectorAll('li');
     }
-    lyricItems = lrcWrapper.querySelectorAll('li');
-
     // 获取当前播放时间对应的歌词索引
     function getCurrentLyricIndex(time) {
       for (let i = 0; i < lyricData.length; i++) {
@@ -777,13 +748,11 @@
       }
       return lyricData.length - 1;
     }
-
     // 滚动至当前歌词
     function scrollLyric(currentLyricIndex) {
       lrcWrapper.style.transform = `translateY(-${ ( currentLyricIndex - 1 ) * 50 }px)`
     }
 
-    let prevLyricIndex = -1; //前一行歌词下标
     //更新当前歌词
     function updateCurrentLyric() {
       const currentLyricIndex = getCurrentLyricIndex(audio.currentTime);
