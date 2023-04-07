@@ -1,3 +1,3 @@
 # jsAudioPlayer
 
-![界面截图](https://i.postimg.cc/mg0PPGCn/GPR12-6-HE-6-4-BJ2-F-FU.png)
+![界面截图](https://i.postimg.cc/C10Hf8k9/audioplayer.png)
