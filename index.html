@@ -429,6 +429,7 @@
           <li data-index="0">大城小爱</li>
           <li data-index="1">我们的歌</li>
           <li data-index="2">依然爱你</li>
+          <!-- 这里以后根据数据动态生成，目前用于测试歌词同步功能 -->
         </ul>
       </div>
 
@@ -437,11 +438,8 @@
     </div>
 
     <div class="lrc-container">
-
       <ul id="lrc_wrapper">
-
       </ul>
-
     </div>
   </div>
 
@@ -752,7 +750,6 @@
       for (let line of lines) {
         const matches = timeExp.exec(line);
         if (!matches) continue;
-
         const minutes = parseInt(matches[1]);
         const seconds = parseInt(matches[2]);
         const milliseconds = parseInt(matches[3]);
@@ -768,7 +765,7 @@
       }
       return result;
     }
-    // 加载歌词并开始播放音乐
+
     const lyricData = parseLyric(lrc);
     let lyricItems;
     const lyricTime = []
@@ -791,7 +788,7 @@
 
     // 滚动至当前歌词
     function scrollLyric(currentLyricIndex) {
-      lrcWrapper.style.transform = `translateY(-${ (currentLyricIndex - 1) * 50}px)`
+      lrcWrapper.style.transform = `translateY(-${ ( currentLyricIndex - 1 ) * 50 }px)`
     }
 
     let prevLyricIndex = -1; //前一行歌词下标
@@ -804,7 +801,6 @@
         activeLyric && activeLyric.classList.remove('active');
         lyric.classList.add('active');
         prevLyricIndex = currentLyricIndex;
-
         currentLyricIndex > 1 && scrollLyric(currentLyricIndex);
       }
     }
