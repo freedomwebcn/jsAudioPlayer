@@ -96,6 +96,7 @@
       Helvetica,
       sans-serif;
     user-select: none;
+    overflow: hidden;
 
   }
 
@@ -106,14 +107,8 @@
     margin: 16px auto;
   }
 
-  @media screen and (max-width: 1000px) {
-    .audio-player-wrapper {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
   .audio-player {
+    flex: 1;
     position: relative;
     width: min(700px, 100% - (var(--container-padding) * 2));
     display: flex;
@@ -121,23 +116,48 @@
     align-items: center;
     background-color: #ddd;
     border-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
     padding: 10px;
     /* margin-inline: auto; */
     /* transform: translateY(50%); */
   }
 
   .lrc-container {
-    flex: 1;
-
+    flex: 100%;
+    text-align: center;
+    height: 150px;
+    overflow: hidden;
+    width: min(700px, 100% - (var(--container-padding) * 2));
     background-color: #cefde5;
+
   }
 
-  @media screen and (max-width: 1000px) {
-    .lrc-container {
-      flex: none;
-      height: 150px;
-      width: min(700px, 100% - (var(--container-padding) * 2));
-    }
+  .lrc-container #lrc_wrapper {
+    transform: translateY(0);
+  }
+
+  .lrc-container #lrc_wrapper li {
+    padding: 0;
+    height: 50px;
+    line-height: 50px;
+    cursor: inherit;
+  }
+
+  .lrc-container #lrc_wrapper {
+    transition: transform .3s ease-out;
+  }
+
+
+  .lrc-container #lrc_wrapper li {
+    transition: transform .2s ease-in;
+
+  }
+
+  .lrc-container #lrc_wrapper li.active {
+    color: #f00;
+    font-weight: bold;
+    transform: scale(1.2);
   }
 
   .player-header {
@@ -401,7 +421,7 @@
       </div>
 
       <div class="track-list">
-        <ul>
+        <ul id="track-wrapper">
           <!-- <li data-index="0">Service Bell</li>
           <li data-index="1">Meadowlark</li>
           <li data-index="2">Hyena Laughing</li>
@@ -417,7 +437,11 @@
     </div>
 
     <div class="lrc-container">
-      1
+
+      <ul id="lrc_wrapper">
+
+      </ul>
+
     </div>
   </div>
 
@@ -437,9 +461,13 @@
     const pauseSvg = document.getElementById("pause-svg");
     const prvBtn = document.getElementById("prv-play");
     const nextBtn = document.getElementById("next-play");
-    const ulEl = document.querySelector("ul");
-    const lis = document.querySelectorAll("li");
+    const ulEl = document.getElementById("track-wrapper");
+    const lis = document.querySelectorAll("#track-wrapper li");
     const lisArr = Array.from(lis);
+    const lrcContainer = document.querySelector('.lrc-container');
+
+    const lrcWrapper = document.querySelector('#lrc_wrapper');
+
 
     const volumeIcons = new Map([
       [{
@@ -462,48 +490,75 @@
       ],
     ]);
 
-    // const musicPlaylist = [{
-    //     title: "大城小爱",
-    //     artist: "王力宏",
-    //     url: "./王力宏 - 大城小爱.flac",
-    //   },
-    //   {
-    //     title: "我们的歌",
-    //     artist: "王力宏",
-    //     url: "./王力宏 - 我们的歌.flac",
-    //   },
-    //   {
-    //     title: "依然爱你",
-    //     artist: "王力宏",
-    //     url: "./王力宏 - 依然爱你.flac",
-    //   }
-    // ]
     const musicPlaylist = [{
-        title: "Service Bell",
-        artist: "Daniel Simion",
-        url: "https://soundbible.com/mp3/service-bell_daniel_simion.mp3",
-        image: "https://source.unsplash.com/crs2vlkSe98/400x400",
+        title: "大城小爱",
+        artist: "王力宏",
+        url: "./王力宏 - 大城小爱.flac",
       },
       {
-        title: "Meadowlark",
-        artist: "Daniel Simion",
-        url: "https://soundbible.com/mp3/meadowlark_daniel-simion.mp3",
-        image: "https://source.unsplash.com/35bE_njbG9E/400x400",
+        title: "我们的歌",
+        artist: "王力宏",
+        url: "./王力宏 - 我们的歌.flac",
       },
       {
-        title: "Hyena Laughing",
-        artist: "Daniel Simion",
-        url: "https://soundbible.com/mp3/hyena-laugh_daniel-simion.mp3",
-        image: "https://source.unsplash.com/Esax9RaEl2I/400x400",
-      },
-      {
-        title: "Creepy Background",
-        artist: "Daniel Simion",
-        url: "http://soundbible.com/mp3/creepy-background-daniel_simon.mp3",
-        image: "https://source.unsplash.com/j0g8taxHZa0/400x400",
-      },
-    ];
+        title: "依然爱你",
+        artist: "王力宏",
+        url: "./王力宏 - 依然爱你.flac",
+      }
+    ]
+    // const musicPlaylist = [{
+    //     title: "Service Bell",
+    //     artist: "Daniel Simion",
+    //     url: "https://soundbible.com/mp3/service-bell_daniel_simion.mp3",
+    //     image: "https://source.unsplash.com/crs2vlkSe98/400x400",
+    //   },
+    //   {
+    //     title: "Meadowlark",
+    //     artist: "Daniel Simion",
+    //     url: "https://soundbible.com/mp3/meadowlark_daniel-simion.mp3",
+    //     image: "https://source.unsplash.com/35bE_njbG9E/400x400",
+    //   },
+    //   {
+    //     title: "Hyena Laughing",
+    //     artist: "Daniel Simion",
+    //     url: "https://soundbible.com/mp3/hyena-laugh_daniel-simion.mp3",
+    //     image: "https://source.unsplash.com/Esax9RaEl2I/400x400",
+    //   },
+    //   {
+    //     title: "Creepy Background",
+    //     artist: "Daniel Simion",
+    //     url: "http://soundbible.com/mp3/creepy-background-daniel_simon.mp3",
+    //     image: "https://source.unsplash.com/j0g8taxHZa0/400x400",
+    //   },
+    // ];
 
+
+
+    const lrc = `
+     [00:00.000] 作词 : 王力宏/陈信延\n[00:01.000] 作曲 : 王力宏\n[00:02.000] 编曲 :王力宏\n[00:03.000]\n[00:16.102]已经听了一百遍\n
+     [00:19.540]怎么听都不会倦\n
+     [00:22.907]从白天唱到黑夜\n
+     [00:26.185]你一直在身边\n[00:29.854]如果世界太危险\n[00:33.247]只有音乐最安全\n[00:36.692]带着我进梦里面\n[00:39.859]让歌词都实现\n
+     [00:42.909]无论是开心还是难过我的爱一直不变\n[00:46.746]不必担心时间流逝带走一切\n
+     [00:49.738]无论是Hip-Hop还是摇滚我的爱一直不变\n[00:53.574]所有美好回忆记录在里面\n[00:56.606]这种 Forever Love 那么深\n
+     [00:58.955]我们的歌那么真\n
+     [01:00.692]无国界跨时代\n
+     [01:02.377]再也不会叫我Kiss Goodbye\n
+     [01:03.909]要每一句能够动人心弦Yeah\n[01:10.972]情人总分分合合\n[01:13.926]可是我们却越爱越深\n
+     [01:17.807]认识你让我的幸福如此悦耳\n[01:24.663]能不能不要切歌\n[01:27.647]继续唱我们的歌​​\n[01:31.541]让感动一辈子都记得\n[01:36.312]\n[01:48.668]已经听了一百遍\n[01:52.103]怎么听都不会倦\n[01:55.549]从白天唱到黑夜\n[01:58.735]你一直在身边\n[02:02.376]如果世界太危险\n[02:05.799]只有音乐最安全\n[02:09.189]带着我进梦里面\n[02:12.391]让歌词都实现\n[02:15.445]无论是开心还是难过我的爱一直不变\n[02:19.283]不必担心时间流逝带走一切\n
+     [02:22.311]无论是Hip-Hop还是摇滚我的爱一直不变\n[02:26.120]所有美好回忆记录在里面\n[02:29.179]这种 Forever Love 那么深\n
+     [02:31.519]我们的歌那么真\n[02:33.244]无国界跨时代\n[02:34.959]再也不会叫我Kiss Goodbye\n
+     [02:36.420]要每一句能够动人心弦Yeah\n[02:43.511]情人总分分合合\n[02:46.474]可是我们却越爱越深\n
+     [02:50.374]认识你让我的幸福如此悦耳\n
+     [02:57.209]能不能不要切歌\n
+     [03:00.185]继续唱我们的歌​​\n[03:04.105]让感动一辈子都记得\n[03:08.830]\n[03:36.623]情人总分分合合\n[03:39.635]可是我们却越爱越深\n
+     [03:43.517]认识你让我的幸福如此悦耳\n
+     [03:50.367]能不能不要切歌\n[03:53.302]继续唱我们的歌​​\n[03:57.225]让感动一辈子都记得\n[04:03.825]电吉他/其他乐器：王力宏\n
+     [04:04.061]鼓手：EricFawcrtt\n[04:04.446]贝斯：John Mumson\n[04:04.644]录音师/录音室：王力宏/Homeboy Music Studios,Taipei\n
+     [04:04.824]OP：HIM Music Publishing Inc.\n[04:05.013]OP：Homeboy Music,Inc,Taiwan\n
+     [04:05.163]SP：Sony Music Publishing(Pre)Ltd.TaiwanBranch\n
+    
+    `
     let currentPlayIndex = 0;
 
     function initMusicPlayer() {
@@ -664,6 +719,7 @@
       const percentage = Math.max(0, Math.min(position / rect.width, 1));
       progressBarFill.style.width = `${percentage * 100}%`;
       audio.currentTime = audio.duration * percentage;
+      updateCurrentLyric()
     }
     // 停止调节进度条
     function stopProgressSlide() {
@@ -684,8 +740,74 @@
       const progressPercentage = audio.currentTime / audio.duration;
       progressBarFill.style.width = `${progressPercentage * 100}%`;
       updateMusicTime();
+      updateCurrentLyric()
     }
 
+    // 解析歌词信息
+    function parseLyric(lyric) {
+      const lines = lyric.split('\n');
+      const result = [];
+      const timeExp = /\[(\d{2}):(\d{2})\.(\d{3})\]/;
+
+      for (let line of lines) {
+        const matches = timeExp.exec(line);
+        if (!matches) continue;
+
+        const minutes = parseInt(matches[1]);
+        const seconds = parseInt(matches[2]);
+        const milliseconds = parseInt(matches[3]);
+        // audio currentTime返回秒 而歌词数据是: 分 秒 毫秒，这里统一转换成秒
+        const time = minutes * 60 + seconds + milliseconds / 1000;
+        const text = line.replace(timeExp, '').trim();
+        if (text) {
+          result.push({
+            time,
+            text
+          });
+        }
+      }
+      return result;
+    }
+    // 加载歌词并开始播放音乐
+    const lyricData = parseLyric(lrc);
+    let lyricItems;
+    const lyricTime = []
+
+    for (let lyric of lyricData) {
+      const item = document.createElement('li');
+      lyricTime.push(lyric.time)
+      item.innerText = lyric.text.split('\\n').join('');
+      lrcWrapper.appendChild(item);
+    }
+    lyricItems = lrcWrapper.querySelectorAll('li');
+
+    // 获取当前播放时间对应的歌词索引
+    function getCurrentLyricIndex(time) {
+      for (let i = 0; i < lyricData.length; i++) {
+        if (time < lyricData[i].time) return i - 1;
+      }
+      return lyricData.length - 1;
+    }
+
+    // 滚动至当前歌词
+    function scrollLyric(currentLyricIndex) {
+      lrcWrapper.style.transform = `translateY(-${ (currentLyricIndex - 1) * 50}px)`
+    }
+
+    let prevLyricIndex = -1; //前一行歌词下标
+    //更新当前歌词
+    function updateCurrentLyric() {
+      const currentLyricIndex = getCurrentLyricIndex(audio.currentTime);
+      if (currentLyricIndex !== prevLyricIndex) {
+        const lyric = lyricItems[currentLyricIndex];
+        const activeLyric = lrcWrapper.querySelector('.active');
+        activeLyric && activeLyric.classList.remove('active');
+        lyric.classList.add('active');
+        prevLyricIndex = currentLyricIndex;
+
+        currentLyricIndex > 1 && scrollLyric(currentLyricIndex);
+      }
+    }
     initMusicPlayer();
   </script>
 </body>
