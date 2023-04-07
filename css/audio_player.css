@@ -1,0 +1,347 @@
+ :root {
+     --container-padding: 1rem;
+ }
+
+
+ /* Box sizing rules */
+ *,
+ *::before,
+ *::after {
+     box-sizing: border-box;
+ }
+
+ /* Remove default margin */
+ * {
+     margin: 0;
+     padding: 0;
+     font: inherit;
+ }
+
+ /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ ul[role="list"],
+ ol[role="list"] {
+     list-style: none;
+ }
+
+ /* Set core root defaults */
+ html:focus-within {
+     scroll-behavior: smooth;
+ }
+
+ html,
+ body {
+     height: 100%;
+ }
+
+ /* Set core body defaults */
+ body {
+     text-rendering: optimizeSpeed;
+     line-height: 1.5;
+ }
+
+ /* A elements that don't have a class get default styles */
+ a:not([class]) {
+     text-decoration-skip-ink: auto;
+ }
+
+
+ /* Make images easier to work with */
+ img,
+ picture,
+ svg {
+     max-width: 100%;
+     display: block;
+ }
+
+ /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+ @media (prefers-reduced-motion: reduce) {
+     html:focus-within {
+         scroll-behavior: auto;
+     }
+
+     *,
+     *::before,
+     *::after {
+         animation-duration: 0.01ms !important;
+         animation-iteration-count: 1 !important;
+         transition-duration: 0.01ms !important;
+         scroll-behavior: auto !important;
+     }
+ }
+
+ body {
+     height: 100vh;
+     margin: 0;
+     padding: 0;
+     font-family: -apple-system,
+         BlinkMacSystemFont,
+         PingFang SC,
+         Hiragino Sans GB,
+         HarmonyOS_Medium,
+         Arial,
+         Microsoft YaHei,
+         Helvetica Neue,
+         Helvetica,
+         sans-serif;
+     user-select: none;
+     overflow: hidden;
+
+ }
+
+ .audio-player-wrapper {
+     display: flex;
+     flex-wrap: wrap;
+     width: min(1000px, 100% - (var(--container-padding) * 2));
+     margin: 0px auto;
+     position: relative;
+     top: 50%;
+     transform: translateY(-80%);
+ }
+
+ .audio-player {
+     flex: 1;
+     position: relative;
+     width: min(700px, 100% - (var(--container-padding) * 2));
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     background-color: #ddd;
+     border-radius: 5px;
+     border-bottom-right-radius: 0;
+     border-bottom-left-radius: 0;
+     padding: 10px;
+     /* margin-inline: auto; */
+     /* transform: translateY(50%); */
+ }
+
+ .lrc-container {
+     flex: 100%;
+     text-align: center;
+     height: 150px;
+     overflow: hidden;
+     width: min(700px, 100% - (var(--container-padding) * 2));
+     background-color: #FF4081;
+     color: #eee;
+     border-bottom-right-radius: 5px;
+     border-bottom-left-radius: 5px;
+
+ }
+
+ .lrc-container #lrc_wrapper {
+     transform: translateY(0);
+ }
+
+ .lrc-container #lrc_wrapper li {
+     padding: 0;
+     height: 50px;
+     line-height: 50px;
+     cursor: inherit;
+ }
+
+ .lrc-container #lrc_wrapper {
+     transition: transform .3s ease-out;
+ }
+
+
+ .lrc-container #lrc_wrapper li {
+     transition: transform .2s ease-in;
+
+ }
+
+ .lrc-container #lrc_wrapper li.active {
+     color: rgb(27, 26, 26);
+     font-weight: bold;
+     transform: scale(1.2);
+ }
+
+ .player-header {
+     flex: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 1rem;
+ }
+
+ .player_music {
+     flex: 1;
+     margin: 0 10px;
+ }
+
+ .player-music-info {
+     flex: 1;
+     display: flex;
+     justify-content: space-between;
+     margin-bottom: 10px;
+
+ }
+
+ .player-music-info .title {
+     flex: 1;
+     width: 0;
+     overflow: hidden;
+     white-space: nowrap;
+     text-overflow: ellipsis;
+ }
+
+ .player-music-info a {
+     color: #333;
+     text-decoration: none;
+     cursor: pointer;
+ }
+
+ .progress-bar-wrapper {
+     width: 100%;
+     position: relative;
+     /* margin-bottom: 5px; */
+     height: 8px;
+     padding-top: 6px;
+     box-sizing: content-box;
+     cursor: pointer;
+ }
+
+ .progress-bar {
+     position: relative;
+     width: 100%;
+     height: 2px;
+     background-color: #eee;
+ }
+
+ .fill {
+     position: absolute;
+     top: 0;
+     left: 0;
+     height: 100%;
+     background-color: #2ecc71;
+ }
+
+ .handle {
+     position: absolute;
+     top: -5px;
+     left: 0;
+     width: 10px;
+     height: 20px;
+     background-color: #fff;
+     border: 1px solid #ccc;
+     cursor: pointer;
+ }
+
+ .player_progress__dot {
+     position: absolute;
+     top: -6px;
+     right: -6.5px;
+     width: 13px;
+     height: 13px;
+     background-color: rgb(14, 187, 115);
+     border-radius: 6.5px;
+ }
+
+ #progressBuffer {
+     height: 2px;
+     width: 0;
+     background-color: #cefde5;
+ }
+
+ .left-control {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-right: 1rem;
+ }
+
+ #prv-play {
+     font-size: 25px;
+ }
+
+ .next-btn {
+     font-size: 25px;
+ }
+
+ .left-control span {
+     font-size: 25px;
+     cursor: pointer;
+ }
+
+ .track-list {
+     flex: 100%;
+ }
+
+ ul {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+ }
+
+ li {
+     cursor: pointer;
+     border-radius: 3px;
+     padding: 10px 10px;
+ }
+
+ .current-play {
+     background-color: rgb(22, 93, 255);
+     color: #fff;
+ }
+
+ #playButton {
+     cursor: pointer;
+ }
+
+ /* 音量条 */
+
+ #volumeSlider {
+     position: relative;
+     width: 100px;
+     height: 3px;
+     background-color: #ccc;
+     cursor: pointer;
+ }
+
+ #volumeSliderFill {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 50%;
+     height: 100%;
+     background-color: #333;
+ }
+
+ #volumeSliderThumb {
+     position: absolute;
+     top: -4px;
+     left: calc(50% - 6px);
+     width: 11px;
+     height: 11px;
+     border-radius: 50%;
+     background-color: #333;
+ }
+
+ #playBtn {
+     background-color: transparent;
+     border: none;
+     outline: none;
+     cursor: pointer;
+     padding: 0;
+     margin: 0 20px;
+
+ }
+
+ #playBtn span {
+     font-size: 29px;
+ }
+
+ ;
+
+ #playBtn:hover {
+     /* background-color: rgb(64, 128, 255); */
+ }
+
+ .right-control {
+     display: flex;
+     align-items: center;
+     justify-content: flex-end;
+ }
+
+ .volume-svg {
+     width: 36px;
+     height: 36px;
+ }
