@@ -126,12 +126,17 @@
      border-bottom-right-radius: 5px;
      border-bottom-left-radius: 5px;
      /* background-image: linear-gradient(to left, transparent, #FF4081); */
+     top: -1px;
+     /* background-image: linear-gradient(#DDD -104%, #DDD, #FF4081 118%, transparent); */
+
+     background-image: linear-gradient(to bottom, #DDD, #FF4081);
+
 
 
 
  }
 
- .lrc-container::before {
+ /* .lrc-container::before {
      content: '';
      display: block;
      width: 50%;
@@ -154,7 +159,7 @@
      background-image: linear-gradient(to left, transparent, #FF4081 60%);
 
 
- }
+ } */
 
 
  .lrc-container #lrc_wrapper {
@@ -383,6 +388,6 @@
 
  .test {
      width: 100%;
-     height: 200px;
-     background-image: linear-gradient(transparent, #FF4081);
+     height: 20px;
+     background-image: linear-gradient(transparent, #DDD, #FF4081 50%, transparent);
  }
