@@ -14,6 +14,7 @@ dist-ssr
 
 
 *.flac
+*.lrc
 
 
 # Editor directories and files

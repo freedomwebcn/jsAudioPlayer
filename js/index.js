@@ -44,44 +44,74 @@ const volumeIcons = new Map([
   ],
 ]);
 
+// const musicPlaylist = [
+//   {
+//     title: "我们的歌",
+//     artist: "王力宏",
+//     url: "./王力宏 - 我们的歌.flac",
+//   },
+// ];
+
 const musicPlaylist = [
   {
-    title: "我们的歌",
-    artist: "王力宏",
-    url: "./王力宏 - 我们的歌.flac",
+    title: "月半小夜曲",
+    artist: "李克勤",
+    url: "../李克勤 - 月半小夜曲.flac",
   },
 ];
 
-const lrc = `
-     [00:00.000] 作词 : 王力宏/陈信延\n[00:01.000] 作曲 : 王力宏\n[00:02.000] 编曲 :王力宏\n[00:03.000]\n[00:16.102]已经听了一百遍\n
-     [00:19.540]怎么听都不会倦\n
-     [00:22.907]从白天唱到黑夜\n
-     [00:26.185]你一直在身边\n[00:29.854]如果世界太危险\n[00:33.247]只有音乐最安全\n[00:36.692]带着我进梦里面\n[00:39.859]让歌词都实现\n
-     [00:42.909]无论是开心还是难过我的爱一直不变\n[00:46.746]不必担心时间流逝带走一切\n
-     [00:49.738]无论是Hip-Hop还是摇滚我的爱一直不变\n[00:53.574]所有美好回忆记录在里面\n[00:56.606]这种 Forever Love 那么深\n
-     [00:58.955]我们的歌那么真\n
-     [01:00.692]无国界跨时代\n
-     [01:02.377]再也不会叫我Kiss Goodbye\n
-     [01:03.909]要每一句能够动人心弦Yeah\n[01:10.972]情人总分分合合\n[01:13.926]可是我们却越爱越深\n
-     [01:17.807]认识你让我的幸福如此悦耳\n[01:24.663]能不能不要切歌\n[01:27.647]继续唱我们的歌​​\n[01:31.541]让感动一辈子都记得\n[01:36.312]\n[01:48.668]已经听了一百遍\n[01:52.103]怎么听都不会倦\n[01:55.549]从白天唱到黑夜\n[01:58.735]你一直在身边\n[02:02.376]如果世界太危险\n[02:05.799]只有音乐最安全\n[02:09.189]带着我进梦里面\n[02:12.391]让歌词都实现\n[02:15.445]无论是开心还是难过我的爱一直不变\n[02:19.283]不必担心时间流逝带走一切\n
-     [02:22.311]无论是Hip-Hop还是摇滚我的爱一直不变\n[02:26.120]所有美好回忆记录在里面\n[02:29.179]这种 Forever Love 那么深\n
-     [02:31.519]我们的歌那么真\n[02:33.244]无国界跨时代\n[02:34.959]再也不会叫我Kiss Goodbye\n
-     [02:36.420]要每一句能够动人心弦Yeah\n[02:43.511]情人总分分合合\n[02:46.474]可是我们却越爱越深\n
-     [02:50.374]认识你让我的幸福如此悦耳\n
-     [02:57.209]能不能不要切歌\n
-     [03:00.185]继续唱我们的歌​​\n[03:04.105]让感动一辈子都记得\n[03:08.830]\n[03:36.623]情人总分分合合\n[03:39.635]可是我们却越爱越深\n
-     [03:43.517]认识你让我的幸福如此悦耳\n
-     [03:50.367]能不能不要切歌\n[03:53.302]继续唱我们的歌​​\n[03:57.225]让感动一辈子都记得\n[04:03.825]电吉他/其他乐器：王力宏\n
-     [04:04.061]鼓手：EricFawcrtt\n[04:04.446]贝斯：John Mumson\n[04:04.644]录音师/录音室：王力宏/Homeboy Music Studios,Taipei\n
-     [04:04.824]OP：HIM Music Publishing Inc.\n[04:05.013]OP：Homeboy Music,Inc,Taiwan\n
-     [04:05.163]SP：Sony Music Publishing(Pre)Ltd.TaiwanBranch\n
-    
-    `;
+// const lrc = `
+//      [00:00.000] 作词 : 王力宏/陈信延\n[00:01.000] 作曲 : 王力宏\n[00:02.000] 编曲 :王力宏\n[00:03.000]\n[00:16.102]已经听了一百遍\n
+//      [00:19.540]怎么听都不会倦\n
+//      [00:22.907]从白天唱到黑夜\n
+//      [00:26.185]你一直在身边\n[00:29.854]如果世界太危险\n[00:33.247]只有音乐最安全\n[00:36.692]带着我进梦里面\n[00:39.859]让歌词都实现\n
+//      [00:42.909]无论是开心还是难过我的爱一直不变\n[00:46.746]不必担心时间流逝带走一切\n
+//      [00:49.738]无论是Hip-Hop还是摇滚我的爱一直不变\n[00:53.574]所有美好回忆记录在里面\n[00:56.606]这种 Forever Love 那么深\n
+//      [00:58.955]我们的歌那么真\n
+//      [01:00.692]无国界跨时代\n
+//      [01:02.377]再也不会叫我Kiss Goodbye\n
+//      [01:03.909]要每一句能够动人心弦Yeah\n[01:10.972]情人总分分合合\n[01:13.926]可是我们却越爱越深\n
+//      [01:17.807]认识你让我的幸福如此悦耳\n[01:24.663]能不能不要切歌\n[01:27.647]继续唱我们的歌​​\n[01:31.541]让感动一辈子都记得\n[01:36.312]\n[01:48.668]已经听了一百遍\n[01:52.103]怎么听都不会倦\n[01:55.549]从白天唱到黑夜\n[01:58.735]你一直在身边\n[02:02.376]如果世界太危险\n[02:05.799]只有音乐最安全\n[02:09.189]带着我进梦里面\n[02:12.391]让歌词都实现\n[02:15.445]无论是开心还是难过我的爱一直不变\n[02:19.283]不必担心时间流逝带走一切\n
+//      [02:22.311]无论是Hip-Hop还是摇滚我的爱一直不变\n[02:26.120]所有美好回忆记录在里面\n[02:29.179]这种 Forever Love 那么深\n
+//      [02:31.519]我们的歌那么真\n[02:33.244]无国界跨时代\n[02:34.959]再也不会叫我Kiss Goodbye\n
+//      [02:36.420]要每一句能够动人心弦Yeah\n[02:43.511]情人总分分合合\n[02:46.474]可是我们却越爱越深\n
+//      [02:50.374]认识你让我的幸福如此悦耳\n
+//      [02:57.209]能不能不要切歌\n
+//      [03:00.185]继续唱我们的歌​​\n[03:04.105]让感动一辈子都记得\n[03:08.830]\n[03:36.623]情人总分分合合\n[03:39.635]可是我们却越爱越深\n
+//      [03:43.517]认识你让我的幸福如此悦耳\n
+//      [03:50.367]能不能不要切歌\n[03:53.302]继续唱我们的歌​​\n[03:57.225]让感动一辈子都记得\n[04:03.825]电吉他/其他乐器：王力宏\n
+//      [04:04.061]鼓手：EricFawcrtt\n[04:04.446]贝斯：John Mumson\n[04:04.644]录音师/录音室：王力宏/Homeboy Music Studios,Taipei\n
+//      [04:04.824]OP：HIM Music Publishing Inc.\n[04:05.013]OP：Homeboy Music,Inc,Taiwan\n
+//      [04:05.163]SP：Sony Music Publishing(Pre)Ltd.TaiwanBranch\n
+
+//     `;
+
+let lrc = ``;
+
 let currentPlayIndex = 0;
 let duration = "00:00";
-const lyricData = parseLyric(lrc);
+let lyricData = [];
 let lyricItems;
 let prevLyricIndex = -1; //前一行歌词下标
+
+fetch("李克勤 - 月半小夜曲.lrc")
+  .then((response) => {
+    if (response.status == 200) {
+      return response.text();
+    }
+    return Promise.reject(response.statusText);
+  })
+  .then((data) => {
+    lyricData = parseLyric(data);
+    console.log(lyricData);
+    // 创建歌词节点
+    createLyricEl();
+    console.log(lrc);
+  })
+  .catch((error) => {
+    // 处理请求失败的情况
+    console.log(error);
+  });
 
 function initMusicPlayer() {
   audio.volume = 0.5;
@@ -95,9 +125,6 @@ function initMusicPlayer() {
   const percentage = volume * 100;
   volumeSliderFill.style.width = `${percentage}%`;
   volumeSliderThumb.style.left = `calc(${percentage}% - 6px)`;
-
-  // 创建歌词节点
-  createLyricEl();
 
   // 绑定事件处理函数
   playBtn.addEventListener("click", togglePlay);
@@ -121,6 +148,8 @@ function onLoadedmetadata() {
 }
 // 媒体文件播放结束或者没有更多可用的数据而停止时被触发
 function onEnded() {
+  audio.currentTime = 0;
+  scrollLyric(1);
   console.log("达到了媒体的未尾");
 }
 //更新音乐时间
@@ -240,7 +269,7 @@ function slideProgress(event) {
   const percentage = Math.max(0, Math.min(position / rect.width, 1));
   progressBarFill.style.width = `${percentage * 100}%`;
   audio.currentTime = audio.duration * percentage;
-  updateCurrentLyric();
+  lyricData.length && updateCurrentLyric();
 }
 // 停止调节进度条
 function stopProgressSlide() {
@@ -261,14 +290,14 @@ function updatePlayProgress() {
   const progressPercentage = audio.currentTime / audio.duration;
   progressBarFill.style.width = `${progressPercentage * 100}%`;
   updateMusicTime();
-  updateCurrentLyric();
+  lyricData.length && updateCurrentLyric();
 }
 
 // 解析歌词信息
 function parseLyric(lyric) {
   const lines = lyric.split("\n");
   const result = [];
-  const timeExp = /\[(\d{2}):(\d{2})\.(\d{3})\]/;
+  const timeExp = /\[(\d{2}):(\d{2})\.(\d+)\]/;
 
   for (let line of lines) {
     const matches = timeExp.exec(line);
