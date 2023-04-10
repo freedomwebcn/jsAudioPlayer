@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+    <link type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.1.1/styles/overlayscrollbars.min.css"
+        rel="stylesheet" />
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.1.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha512-iURYOChSOi+atVWndKNjW16H4+qDrVFRJMnS10b9cxbtHZMonlAbic54vf3Y9r8R1t7zd2L/9zmBOFfHjZk1SQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</head>
+
+<style>
+    html {
+        background-color: #121212;
+        font-family: -apple-system,
+            BlinkMacSystemFont,
+            PingFang SC,
+            Hiragino Sans GB,
+            HarmonyOS_Medium,
+            Arial,
+            Microsoft YaHei,
+            Helvetica Neue,
+            Helvetica,
+            sans-serif;
+    }
+
+    /* Box sizing rules */
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* Remove default margin */
+    * {
+        margin: 0;
+        padding: 0;
+        font: inherit;
+    }
+
+    /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+    ul[role="list"],
+    ol[role="list"] {
+        list-style: none;
+    }
+
+    /* Set core root defaults */
+    html:focus-within {
+        scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+        height: 100%;
+
+    }
+
+    /* Set core body defaults */
+    body {
+        text-rendering: optimizeSpeed;
+        line-height: 1.5;
+    }
+
+    /* A elements that don't have a class get default styles */
+    a:not([class]) {
+        text-decoration-skip-ink: auto;
+    }
+
+
+    /* Make images easier to work with */
+    img,
+    picture,
+    svg {
+        max-width: 100%;
+        display: block;
+    }
+
+    /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+        html:focus-within {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    :root {
+        --container-padding: 1rem;
+        --plr: 16px;
+        --column-count: 9;
+        --background-noise: url('./bg.svg')
+    }
+
+    .cotainer {
+        height: 100%;
+    }
+
+    header {
+        position: fixed;
+        width: 100%;
+        padding: 0 var(--plr);
+        height: 64px;
+        line-height: 64px;
+        color: rgb(179, 179, 179);
+        font-size: 25px;
+        text-align: right;
+        z-index: 5;
+        opacity: 1;
+        /* width: min(1000px, 100% - (var(--container-padding) * 2)); */
+
+    }
+
+
+    header .outer-bg {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        top: 0;
+        right: 0;
+        background-color: #121212;
+        z-index: -1;
+        opacity: 0;
+
+    }
+
+    header .inner-bg {
+        background-color: rgba(0, 0, 0, .6);
+        height: 100%;
+    }
+
+    header button {
+        background-color: transparent;
+        border: 0;
+        color: #fff;
+        cursor: pointer;
+
+    }
+
+
+
+
+    main {
+        display: flex;
+        gap: 24px;
+        /* color: #FFF */
+        flex-wrap: wrap;
+        padding: 64px var(--plr) 0 var(--plr);
+        /* background-color: aquamarine; */
+    }
+
+    .bg {
+        height: 332px;
+        width: 100%;
+        position: absolute;
+        z-index: -1;
+        margin-top: -64px;
+        background-color: rgb(83, 83, 83);
+        background-image: linear-gradient(rgba(0, 0, 0, .6) 0, #121212 100%), var(--background-noise);
+    }
+
+    main section {
+        flex: 1 1 100%;
+        padding-top: 24px;
+        margin-bottom: 16px;
+        max-width: 100%;
+    }
+
+
+    main section .title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 16px;
+
+
+    }
+
+    main section .playlist {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
+    }
+
+    main section .playlist .playlist-item {
+        padding: 16px;
+        background: #181818;
+        border-radius: 6px;
+        width: 100%;
+        transition: background-color .3s ease;
+        cursor: pointer;
+    }
+
+    main section .playlist .playlist-item:hover {
+        background-color: #282828;
+    }
+
+
+
+
+
+    main section .playlist .playlist-item .playlist-item-content .cover-wrapper {
+        margin-bottom: 16px;
+    }
+
+
+    main section .playlist .playlist-item .playlist-item-content .cover-wrapper .cover {
+        position: relative;
+        padding-bottom: 100%;
+        background-color: rgb(51, 51, 51);
+        border-radius: 4px;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 50%);
+        width: 100%;
+
+    }
+
+    main section .playlist .playlist-item .playlist-item-content .cover-wrapper img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 4px;
+    }
+
+    main section .playlist .playlist-item .playlist-item-content .playlist_info {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        min-height: 62px;
+    }
+
+    main section .playlist .playlist-item .playlist-item-content .playlist_info .playlist-name {
+        display: inline-block;
+        max-width: 100%;
+        padding-bottom: 4px;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    main section .playlist .playlist-item .playlist-item-content .playlist_info .track-count {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #a7a7a7;
+        line-height: 1.6;
+
+
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        margin-top: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        white-space: normal;
+    }
+
+    main section:nth-child(1) {
+        /* background-color: red; */
+    }
+
+    main section:nth-child(2) {
+        background-color: rgb(30, 228, 3);
+    }
+
+    @media (min-width: 1024px) {
+        :root {
+            --plr: 32px;
+        }
+    }
+
+    @media (max-width: 414px) {
+        :root {
+            --column-count: 2
+        }
+    }
+
+    @media(min-width:415px) and (max-width: 590px) {
+        :root {
+            --column-count: 3
+        }
+    }
+
+    @media (min-width:590px) and (max-width: 1060px) {
+        :root {
+            --column-count: 4
+        }
+    }
+
+    @media (min-width:1060px) and (max-width: 1260px) {
+        :root {
+            --column-count: 5
+        }
+    }
+
+    @media (min-width:1260px) and (max-width: 1465px) {
+        :root {
+            --column-count: 6
+        }
+    }
+
+    @media (min-width:1465px) and (max-width: 1672px) {
+        :root {
+            --column-count: 7
+        }
+    }
+
+    .os-theme-custom {
+        --os-size: 10px;
+        --os-handle-bg: hsla(0, 0%, 100%, .3);
+        --os-handle-bg-hover: hsla(0, 0%, 100%, .5);
+        --os-handle-bg-active: hsla(0, 0%, 100%, .6);
+    }
+</style>
+
+<body>
+    <div class="cotainer">
+        <header>
+            <div class="outer-bg">
+                <div class="inner-bg"></div>
+            </div>
+            <button>
+                search
+            </button>
+        </header>
+        <div class="bg"></div>
+        <main>
+            <section>
+                <div class="title">
+                    <h3>媒体库</h3>
+                </div>
+                <div class="playlist">
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="./tools/art-template.js"></script>
+    <script id="tpl-playlist" type="text/html">
+        <div class="playlist-item">
+            <div class="playlist-item-content">
+                <div class="cover-wrapper">
+                    <div class="cover">
+                        <img draggable="false" src={{cover}}>
+                    </div>
+                    <div class="icon"></div>
+                </div>
+                <div class="playlist_info">
+                    <span class="playlist-name">{{name}}</span>
+                    <div class="track-count"> 共计 666 首音乐</div>
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+    </script>
+    <script>
+
+        window.onload = function () {
+            var {
+                OverlayScrollbars,
+                ScrollbarsHidingPlugin,
+                SizeObserverPlugin,
+                ClickScrollPlugin
+            } = OverlayScrollbarsGlobal;
+
+            const el = document.querySelector('.playlist')
+            const main = document.querySelector('main')
+            const section = document.querySelector('section')
+            const cotainer = document.querySelector('.cotainer')
+            const headerOuterBg = document.querySelector('.outer-bg')
+
+
+            fetch('http://127.0.0.1:5000/get_all_playlist')
+                .then((res) => {
+                    return res.json()
+                })
+                .then((playlistData) => {
+                    let { data } = playlistData
+                    data.forEach(playlist => {
+                        var htmlStr = template('tpl-playlist', playlist)
+                        console.log(htmlStr);
+                        // 5.渲染HTML结构
+                        el.innerHTML += htmlStr
+                    });
+                    const osInstance = OverlayScrollbars(document.querySelector('.cotainer'), {
+                        scrollbars: {
+                            theme: 'os-theme-custom'
+                        }
+                    }, {
+                        scroll() {
+                            scrollPositionRatio = Math.max(Math.min(1 - (156 - event.target.scrollTop) / 156, 1))
+                            headerOuterBg.style.opacity = scrollPositionRatio
+                        }
+                    });
+                    console.log(data);
+                })
+
+
+
+
+
+
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lyrics Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<img src="" alt="">
+
+<body>
+
+    <script src="./tools/jsmediatag.js"></script>
+    <script>
+        const img = document.querySelector('img')
+        var jsmediatags = window.jsmediatags;
+
+        // fetch('./王力宏 - 大城小爱.flac')
+        //     .then(response => response.blob())
+        //     .then(blob => {
+        //         jsmediatags.read(
+        //             blob, {
+        //             onSuccess: parseSuccess,
+        //             onError: parseErr
+        //         });
+        //     })
+
+
+        function parseSuccess(result) {
+            try {
+                let { data, format } = result.tags.picture;
+                let base64String = "";
+                for (let i = 0; i < data.length; i++) {
+                    base64String += String.fromCharCode(data[i]);
+                }
+                img.src = `data:${data.format};base64,${window.btoa(base64String)}`;
+            } catch (error) {
+                console.log('当前音频无内嵌封面');
+                // console.log(error);
+            }
+        }
+
+        function parseErr(err) {
+            console.log(err);
+
+        }
+
+
+        fetch('http://127.0.0.1:5000/get_all_playlist')
+            .then((res) => {
+                return res.json()
+            })
+            .then((playlistData) => {
+
+                let { data } = playlistData
+                console.log(data);
+                data.forEach(item => {
+                    const divel = document.createElement('div')
+                    divel.innerText = item
+                    document.querySelector('body').append(divel)
+                });
+
+            })
+    </script>
+</body>
+
+</html>
